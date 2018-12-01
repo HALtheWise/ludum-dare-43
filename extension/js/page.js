@@ -1,5 +1,7 @@
 'use strict';
 
+const debug = true;
+
 console.log('Script loaded');
 
 let substituteStr = null;
@@ -70,3 +72,28 @@ observer.observe(document, {childList: true, subtree: true});
 
 chrome.runtime.sendMessage("Hello World, before page load");
 chrome.storage.local.get(null, console.log);
+
+//// Click handling
+
+function handleClick(e) {
+	let isLink = false;
+	let link = null;
+	if (debug) console.log("Click detected", e);
+	for (let i = 0; i < e.path.length; i++) {
+		const elem = e.path[i];
+		if (elem.nodeName === 'A') {
+			isLink = true;
+			link = elem;
+			break;
+		}
+	}
+
+	if (isLink) {
+		if (debug) console.log("It's a link!", link);
+
+		e.preventDefault();
+		e.stopImmediatePropagation();
+	}
+}
+
+document.addEventListener('click', handleClick);
