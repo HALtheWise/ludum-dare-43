@@ -33,26 +33,23 @@ function substituteAll(root) {
 
 function updateSubstitutions(blocked_letters, blocked_words) {
 
-	substituteStr = (function () {
-		"use strict";
-		var replacements, ignore, i, replacementsObject, original;
-		replacementsObject = [];
-		for (i = blocked_letters.length - 1; i >= 0; i--) {
-			original = new RegExp(blocked_letters[i], "gi");
-			replacementsObject.push([original, ""]);
-		}
-		for (i = blocked_words.length - 1; i >= 0; i--) {
-			original = new RegExp("\\b" + blocked_words[i] + "\\b", "gi");
-			replacementsObject.push([original, ""]);
-		}
+	var ignore, i, replacementsObject, original;
+	replacementsObject = [];
+	for (i = blocked_letters.length - 1; i >= 0; i--) {
+		original = new RegExp(blocked_letters[i], "gi");
+		replacementsObject.push([original, ""]);
+	}
+	for (i = blocked_words.length - 1; i >= 0; i--) {
+		original = new RegExp("\\b" + blocked_words[i] + "\\b", "gi");
+		replacementsObject.push([original, ""]);
+	}
 
-		return function (str) {
-			for (i = replacementsObject.length - 1; i >= 0; i--) {
-				str = str.replace(replacementsObject[i][0], replacementsObject[i][1]);
-			}
-			return str;
-		};
-	})();
+	substituteStr = function (str) {
+		for (i = replacementsObject.length - 1; i >= 0; i--) {
+			str = str.replace(replacementsObject[i][0], replacementsObject[i][1]);
+		}
+		return str;
+	};
 
 	substituteAll(document);
 	if (document.title)
@@ -61,6 +58,7 @@ function updateSubstitutions(blocked_letters, blocked_words) {
 
 updateSubstitutions('a b c d e'.split(' '), 'cat'.split(' '));
 
+// Setup mutation observer
 const observer = new MutationObserver(function (mutations) {
 	mutations.forEach(function (mutation) {
 		for (var i = 0; i < mutation.addedNodes.length; i++) {
