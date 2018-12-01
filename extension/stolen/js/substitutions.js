@@ -54,9 +54,23 @@ chrome.runtime.sendMessage("config", function(response) {
     };
   })();
 
-  var node, iter;
-  var iter = document.createNodeIterator(document.body, NodeFilter.SHOW_TEXT);
-  while ((node = iter.nextNode())) {
-    substitute(node);
-  }
+  var substituteAll = function (root) {
+    var node;
+    var iter = document.createNodeIterator(root, NodeFilter.SHOW_TEXT);
+    while ((node = iter.nextNode())) {
+      substitute(node);
+    }
+  };
+
+  substituteAll(document.body);
+
+  const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      for (var i = 0; i < mutation.addedNodes.length; i++) {
+        substituteAll(mutation.addedNodes[i]);
+      }
+    })
+  });
+  observer.observe(document.body, {childList: true, subtree: true});
+
 });
