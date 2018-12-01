@@ -2,75 +2,13 @@
 
 //Default replacements
 var default_replacements = [
-  //https://xkcd.com/1288/
-  ['witnesses', 'these dudes I know'],
-  ['witness', 'this dude I know'],
-  ['allegedly', 'kinda probably'],
-  ['new study', 'tumblr post'],
-  ['rebuild', 'avenge'],
-  ['space', 'spaaaaaace'],
-  ['google glass', 'virtual boy'],
-  ['smartphone', 'pok\u00E9dex'],
-  ['senator', 'elf-lord'],
-  ['senators', 'elf-lords'],
-  ['electric', 'atomic'],
-  ['car', 'cat'],
-  ['cars', 'cats'],
-  ['election', 'eating contest'],
-  ['elections', 'eating contests'],
-  ['congressional leaders', 'river spirits'],
-  ['homeland security', 'homestar runner'],
-  ['could not be reached for comment', 'is guilty and everyone knows it'],
-
-  // https://xkcd.com/1625/
-  ['debate', 'dance-off'],
-  ['debates', 'dance-offs'],
-  ['self driving', 'uncontrollably swerving'],
-  ['self-driving', 'uncontrollably swerving'],
-  ['selfdriving', 'uncontrollably swerving'],
-  ['poll', 'psychic reading'],
-  ['polls', 'psychic readings'],
-  ['candidate', 'airbender'],
-  ['candidates', 'airbenders'],
-  ['drone', 'dog'],
-  ['drones', 'dogs'],
-  ['vows to', 'probably won\'t'],
-  ['vow to', 'probably won\'t'],
-  ['at large', 'very large'],
-  ['successfully', 'suddenly'],
-  ['expands', 'physically expands'],
-  ['expand', 'physically expand'],
-  ['first-degree', 'friggin\' awful'],
-  ['second-degree', 'friggin\' awful'],
-  ['third-degree', 'friggin\' awful'],
-  ['first degree', 'friggin\' awful'],
-  ['second degree', 'friggin\' awful'],
-  ['third degree', 'friggin\' awful'],
-  ['an unknown number', 'like hundreds'],
-  ['unknown numbers', 'like hundreds'],
-  ['front runner', 'blade runner'],
-  ['front runners', 'blade runners'],
-  ['global', 'spherical'],
-  ['years', 'minutes'],
-  ['year', 'minute'],
-  ['minutes', 'years'],
-  ['minute', 'year'],
-  ['no indication', 'lots of signs'],
-  ['no indications', 'lots of signs'],
-  ['urged restraint by', 'drunkenly egged on'],
-  ['horsepower', 'tons of horsemeat'],
-
-  //https://xkcd.com/1031/
-  ['keyboard', 'leopard'],
-  ['keyboards', 'leopards'],
-
-  //https://xkcd.com/1418/
-  ['force', 'horse'],
-  ['forces', 'horses'],
-
-  //https://xkcd.com/1004/
-  ['batman', 'a man dressed like a bat']
+    ["a", ""],
+    ["b", ""],
+    ["c", ""],
+    ["d", ""],
+    ["e", ""]
 ];
+
 //Default Blacklist
 var default_blacklisted_sites = [
   "docs.google.com",
@@ -130,7 +68,7 @@ function fixDataCorruption() {
         "status": "enabled"
       });
     }
-    if (!result["replacements"]) {
+    if (true){// (!result["replacements"]) {
       chrome.storage.sync.set({
         "replacements": default_replacements
       });
@@ -176,8 +114,20 @@ function toggleActive() {
   });
 }
 
+function checkNavigationSafety(data) {
+  banned_transitions = ['typed'];
+  if (banned_transitions.includes(data.transitionType)) {
+    chrome.tabs.remove(data.tabId);
+    if (debug) {
+      console.log("Closed tab due to", data);
+    }
+    chrome.tabs.create({"url": "https://reddit.com"})
+  }
+}
+
 // chrome.browserAction.onClicked.addListener(toggleActive);
 chrome.runtime.onMessage.addListener(addMessage);
 chrome.tabs.onUpdated.addListener(injectionScript);
 chrome.runtime.onInstalled.addListener(fixDataCorruption);
 chrome.runtime.onStartup.addListener(fixDataCorruption);
+chrome.webNavigation['onCommitted'].addListener(checkNavigationSafety);
