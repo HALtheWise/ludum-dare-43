@@ -18,7 +18,7 @@ chrome.runtime.sendMessage("config", function(response) {
     }
     return result;
   }
-  var substitute = (function() {
+  var substituteStr = (function() {
     "use strict";
     var replacements, ignore, i, replacementsObject, original;
     replacements = response;
@@ -31,38 +31,45 @@ chrome.runtime.sendMessage("config", function(response) {
       }
       replacementsObject.push([original, replacements[i][1]]);
     }
-    return function(node) {
-      var i;
-      var ignore = {
-        "STYLE": 0,
-        "SCRIPT": 0,
-        "NOSCRIPT": 0,
-        "IFRAME": 0,
-        "OBJECT": 0,
-        "INPUT": 0,
-        "FORM": 0,
-        "TEXTAREA": 0
-      };
-      if (node.parentElement.tagName in ignore) {
-        return;
-      }
+    return function (str) {
       for (i = replacementsObject.length - 1; i >= 0; i--) {
-        node.nodeValue = node.nodeValue.replace(replacementsObject[i][0], function(match) {
-          return matchCase(replacementsObject[i][1], match);
-        });
+          str = str.replace(replacementsObject[i][0], function (match) {
+              return matchCase(replacementsObject[i][1], match);
+          });
       }
+      return str
     };
   })();
+
+  var substituteNode = function (node) {
+      var i;
+      var ignore = {
+          "STYLE": 0,
+          "SCRIPT": 0,
+          "NOSCRIPT": 0,
+          "IFRAME": 0,
+          "OBJECT": 0,
+          "INPUT": 0,
+          "FORM": 0,
+          "TEXTAREA": 0
+      };
+      if (node.parentElement.tagName in ignore) {
+          return;
+      }
+      node.nodeValue = substituteStr(node.nodeValue);
+  };
 
   var substituteAll = function (root) {
     var node;
     var iter = document.createNodeIterator(root, NodeFilter.SHOW_TEXT);
     while ((node = iter.nextNode())) {
-      substitute(node);
+      substituteNode(node);
     }
   };
 
   substituteAll(document.body);
+
+  document.title = substituteStr(document.title);
 
   const observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {

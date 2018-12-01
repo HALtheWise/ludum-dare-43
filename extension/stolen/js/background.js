@@ -1,7 +1,7 @@
 // Taken from https://github.com/Posnet/xkcd-substitutions
 
 //Default replacements
-var default_replacements = [
+const default_replacements = [
     ["a", ""],
     ["b", ""],
     ["c", ""],
@@ -10,7 +10,7 @@ var default_replacements = [
 ];
 
 //Default Blacklist
-var default_blacklisted_sites = [
+const default_blacklisted_sites = [
   "docs.google.com",
   "gmail.com",
   "mail.google.com",
@@ -20,7 +20,7 @@ var default_blacklisted_sites = [
   "xkcd.com"
 ];
 
-var debug = true;
+const debug = true;
 
 function checkBlackList(url, blacklist) {
   url = url.toLowerCase() || "";
@@ -42,7 +42,7 @@ function injectionScript(tabId, info, tab) {
         && !tab.url.startsWith('chrome://')) {
       chrome.tabs.executeScript(tabId, {
         file: "stolen/js/substitutions.js",
-        runAt: "document_end"
+        runAt: "document_start"
       }, function (){
         if (debug){console.log('Script Executed');}
       });
@@ -94,7 +94,7 @@ function toggleActive() {
         "path": "images/disabled.png"
       };
       message = {
-        "title": "click to enable xkcd substitutions"
+        "title": "click to disable the Great Internet Race"
       };
       status = "disabled";
     } else if (status === "disabled") {
@@ -102,7 +102,7 @@ function toggleActive() {
         "path": "images/enabled.png"
       };
       message = {
-        "title": "click to disabled xkcd substitutions"
+        "title": "click to start a new game"
       };
       status = "enabled";
     }
@@ -114,9 +114,10 @@ function toggleActive() {
   });
 }
 
-function checkNavigationSafety(data) {
+function handleNavigation(data) {
   banned_transitions = ['typed'];
-  if (banned_transitions.includes(data.transitionType)) {
+  if (banned_transitions.includes(data.transitionType) || data.transitionQualifiers.includes('from_address_bar')) {
+    confirm("Performing this search will permanently sacrifice the letters a, b, c, d, and e\nDo you accept this sacrifice?");
     chrome.tabs.remove(data.tabId);
     if (debug) {
       console.log("Closed tab due to", data);
@@ -130,4 +131,4 @@ chrome.runtime.onMessage.addListener(addMessage);
 chrome.tabs.onUpdated.addListener(injectionScript);
 chrome.runtime.onInstalled.addListener(fixDataCorruption);
 chrome.runtime.onStartup.addListener(fixDataCorruption);
-chrome.webNavigation['onCommitted'].addListener(checkNavigationSafety);
+chrome.webNavigation['onCommitted'].addListener(handleNavigation);
