@@ -100,9 +100,10 @@ function injectionScript(tabId, info, tab) {
   chrome.storage.sync.get(null, function (result) {
     if (result
         && result["status"] === "enabled"
-        && checkBlackList(tab.url, result['blacklist'])) {
+        && checkBlackList(tab.url, result['blacklist'])
+        && !tab.url.startsWith('chrome://')) {
       chrome.tabs.executeScript(tabId, {
-        file: "js/substitutions.js",
+        file: "stolen/js/substitutions.js",
         runAt: "document_end"
       }, function (){
         if (debug){console.log('Script Executed');}
@@ -175,7 +176,7 @@ function toggleActive() {
   });
 }
 
-chrome.browserAction.onClicked.addListener(toggleActive);
+// chrome.browserAction.onClicked.addListener(toggleActive);
 chrome.runtime.onMessage.addListener(addMessage);
 chrome.tabs.onUpdated.addListener(injectionScript);
 chrome.runtime.onInstalled.addListener(fixDataCorruption);

@@ -1,0 +1,18 @@
+{
+  "manifest_version": 2,
+  "name": "The Great Internet Race",
+  "description": "Can you find your way?",
+  "version": "1.0.0",
+  "background": {
+    "scripts": [
+      "stolen/js/background.js"
+    ],
+    "persistent": false
+  },
+  "permissions": [
+    "tabs",
+    "storage",
+    "http://*/*",
+    "https://*/*"
+  ]
+}
