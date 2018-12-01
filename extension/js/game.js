@@ -7,16 +7,16 @@ function injectionScript(tabId, info, tab) {
 		console.log("injection fire");
 	}
 
-	if (enabled && !tab.url.startsWith('chrome://')) {
-		chrome.tabs.executeScript(tabId, {
-			file: "js/page.js",
-			runAt: "document_start"
-		}, function () {
-			if (debug) {
-				console.log('Script Executed');
-			}
-		});
-	}
+	// if (enabled && !tab.url.startsWith('chrome://')) {
+	// 	chrome.tabs.executeScript(tabId, {
+	// 		file: "js/page.js",
+	// 		runAt: "document_start"
+	// 	}, function () {
+	// 		if (debug) {
+	// 			console.log('Script Executed');
+	// 		}
+	// 	});
+	// }
 }
 
 function handleBeforeNavigation(e) {

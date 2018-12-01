@@ -9,6 +9,18 @@
     ],
     "persistent": true
   },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "js/page.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
   "permissions": [
     "tabs",
     "webNavigation",
