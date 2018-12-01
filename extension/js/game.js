@@ -2,6 +2,8 @@ const debug = true;
 
 let enabled = true;
 
+
+
 function injectionScript(tabId, info, tab) {
 	if (debug) {
 		console.log("injection fire");
@@ -48,3 +50,5 @@ chrome.tabs.onUpdated.addListener(injectionScript);
 // chrome.runtime.onStartup.addListener(fixDataCorruption);
 chrome.webNavigation['onCommitted'].addListener(handleNavigation);
 chrome.webNavigation['onBeforeNavigate'].addListener(handleBeforeNavigation);
+
+chrome.runtime.onMessage.addListener(console.log);

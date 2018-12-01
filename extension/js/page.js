@@ -2,31 +2,7 @@
 
 console.log('Script loaded');
 
-const blocked_letters = 'a b c d e'.split(' ');
-const blocked_words = 'the'.split(' ');
-
-var substituteStr = (function () {
-	"use strict";
-	var replacements, ignore, i, replacementsObject, original;
-	replacementsObject = [];
-	for (i = blocked_letters.length - 1; i >= 0; i--) {
-		original = new RegExp(blocked_letters[i], "gi");
-		replacementsObject.push([original, ""]);
-	}
-	for (i = blocked_words.length - 1; i >= 0; i--) {
-		original = new RegExp("\\b" + blocked_words[i] + "\\b", "gi");
-		replacementsObject.push([original, ""]);
-	}
-
-	return function (str) {
-		for (i = replacementsObject.length - 1; i >= 0; i--) {
-			str = str.replace(replacementsObject[i][0], function (match) {
-				return matchCase(replacementsObject[i][1], match);
-			});
-		}
-		return str;
-	};
-})();
+let substituteStr = null;
 
 function substituteNode(node) {
 	var i;
@@ -55,9 +31,35 @@ function substituteAll(root) {
 	}
 }
 
-substituteAll(document.body);
-document.title = substituteStr(document.title);
+function updateSubstitutions(blocked_letters, blocked_words) {
 
+	substituteStr = (function () {
+		"use strict";
+		var replacements, ignore, i, replacementsObject, original;
+		replacementsObject = [];
+		for (i = blocked_letters.length - 1; i >= 0; i--) {
+			original = new RegExp(blocked_letters[i], "gi");
+			replacementsObject.push([original, ""]);
+		}
+		for (i = blocked_words.length - 1; i >= 0; i--) {
+			original = new RegExp("\\b" + blocked_words[i] + "\\b", "gi");
+			replacementsObject.push([original, ""]);
+		}
+
+		return function (str) {
+			for (i = replacementsObject.length - 1; i >= 0; i--) {
+				str = str.replace(replacementsObject[i][0], replacementsObject[i][1]);
+			}
+			return str;
+		};
+	})();
+
+	substituteAll(document);
+	if (document.title)
+		document.title = substituteStr(document.title);
+}
+
+updateSubstitutions('a b c d e'.split(' '), 'cat'.split(' '));
 
 const observer = new MutationObserver(function (mutations) {
 	mutations.forEach(function (mutation) {
@@ -66,4 +68,7 @@ const observer = new MutationObserver(function (mutations) {
 		}
 	})
 });
-observer.observe(document.body, {childList: true, subtree: true});
+observer.observe(document, {childList: true, subtree: true});
+
+chrome.runtime.sendMessage("Hello World, before page load");
+chrome.storage.local.get(null, console.log);
