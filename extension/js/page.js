@@ -33,16 +33,16 @@ function substituteAll(root) {
 	}
 }
 
-function updateSubstitutions(blocked_letters, blocked_words) {
+function updateSubstitutions(sacrifices) {
 
 	var ignore, i, replacementsObject, original;
 	replacementsObject = [];
-	for (i = blocked_letters.length - 1; i >= 0; i--) {
-		original = new RegExp(blocked_letters[i], "gi");
+	for (i = sacrifices.letters.length - 1; i >= 0; i--) {
+		original = new RegExp(sacrifices.letters[i], "gi");
 		replacementsObject.push([original, ""]);
 	}
-	for (i = blocked_words.length - 1; i >= 0; i--) {
-		original = new RegExp("\\b" + blocked_words[i] + "\\b", "gi");
+	for (i = sacrifices.words.length - 1; i >= 0; i--) {
+		original = new RegExp("\\b" + sacrifices.words[i] + "\\b", "gi");
 		replacementsObject.push([original, ""]);
 	}
 
@@ -58,7 +58,7 @@ function updateSubstitutions(blocked_letters, blocked_words) {
 		document.title = substituteStr(document.title);
 }
 
-updateSubstitutions('a b c d e'.split(' '), 'cat'.split(' '));
+updateSubstitutions(new SacrificesMade('a b c d e'.split(' '), 'cat'.split(' ')));
 
 // Setup mutation observer
 const observer = new MutationObserver(function (mutations) {
@@ -73,8 +73,11 @@ observer.observe(document, {childList: true, subtree: true});
 chrome.runtime.sendMessage("Hello World, before page load");
 chrome.storage.local.get(null, console.log);
 
-//// Click handling
+function askLinkSacrifice(elem){
 
+}
+
+//// Click handling
 function handleClick(e) {
 	let isLink = false;
 	let link = null;

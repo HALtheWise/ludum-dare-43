@@ -5,6 +5,7 @@
   "version": "1.0.0",
   "background": {
     "scripts": [
+      "js/types.js",
       "js/navigation.js",
       "js/game.js"
     ],
@@ -17,6 +18,7 @@
         "https://*/*"
       ],
       "js": [
+        "js/types.js",
         "js/page.js"
       ],
       "run_at": "document_start"
