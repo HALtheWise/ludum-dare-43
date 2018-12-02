@@ -86,12 +86,66 @@ function handleBeforeNavigation(e) {
 }
 
 function handleNavigation(e) {
-	const banned_transitions = ['typed'];
+	const search_providers = 'google.com bing.com facebook.com en.wikipedia.org search.yahoo.com'.split(' ');
 	let typed_string = "";
 
-	if (banned_transitions.includes(e.transitionType)) {
-		typed_string = e.url;
+	if (e.transitionQualifiers.includes('from_address_bar')) {
+		const url = new URL(e.url);
+
+		const params = new URLSearchParams(url.search);
+		search_query = params.get('q') || params.get('p') || params.get('search');
+		if (search_providers.includes(url.host) && search_query) {
+			// User performed a search from the address bar
+			console.log('Search detected', url);
+			typed_string = search_query;
+		} else if (e.transitionType === 'typed') {
+			typed_string = url.host;
+			if (typed_string.startsWith('www.')){
+				typed_string = typed_string.slice(4);
+			}
+		}
 	}
+	console.log("Detected navigation", e);
+
+	if (typed_string.length > 0) {
+		// The user is attempting navigation
+		const letters = typed_string.split('');
+		let disallow_reason = '';
+
+		// TODO Check for sacrificed letters
+		// if (clean)
+
+		// Check for duplicate letters
+		for (let i = 0; i < letters.length; i++) {
+			const l = letters[i];
+
+			if (l.search(/^[\w ]/) === -1)
+			// Special characters don't fall for the double-count ban
+				continue;
+
+			if (letters.indexOf(l) !== letters.lastIndexOf(l)) {
+				disallow_reason = `You may not sacrifice the letter "${l}" more than once!`;
+				break;
+			}
+		}
+
+		// Ask for their consent
+
+		const message = `You are attempting to search for the phrase "${typed_string}".`
+			+ `\nThis requires a permanent sacrifice of the letter${letters.length > 1 ? 's' : ''} `
+			+ textlist(letters.map(s => `"${s}"`));
+
+		let consent = false;
+		if (!disallow_reason) {
+			// TODO sanitize the letters and words in this message!
+			consent = confirm(message);
+		} else {
+			alert(message + '\n Unfortunately... ' + disallow_reason);
+		}
+
+		console.log(consent);
+	}
+	// confirm(``)
 
 
 // 	if (banned_transitions.includes(data.transitionType) || data.transitionQualifiers.includes('from_address_bar')) {
@@ -104,5 +158,5 @@ function handleNavigation(e) {
 // 	}
 }
 
-chrome.webNavigation.onCompleted.addListener(handleNavigation);
+chrome.webNavigation.onCommitted.addListener(handleNavigation);
 // chrome.webNavigation['onBeforeNavigate'].addListener(handleBeforeNavigation);

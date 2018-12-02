@@ -18,7 +18,7 @@ function substituteNode(node) {
 		"FORM": 0,
 		"TEXTAREA": 0
 	};
-	if (node.parentElement.tagName in ignore) {
+	if (!node.parentElement || node.parentElement.tagName in ignore) {
 		return;
 	}
 	node.nodeValue = substituteStr(node.nodeValue);
@@ -73,11 +73,42 @@ observer.observe(document, {childList: true, subtree: true});
 chrome.runtime.sendMessage("Hello World, before page load");
 chrome.storage.local.get(null, console.log);
 
-function askLinkSacrifice(elem){
+//// Click handling
 
+function confirmLinkSacrifice(elem){
+	let s = [];
+
+	let node;
+	const iter = document.createNodeIterator(elem, NodeFilter.SHOW_TEXT);
+	while ((node = iter.nextNode())) {
+		s.push(node.nodeValue)
+	}
+
+	let words = s.join(' ').split(/\s+/).filter(
+		s => s.search(/\W/) === -1 && s.length>0);
+	words = words.map(substituteStr);
+
+	if (words.length === 0) {
+		console.log("Unable to follow link, has no nested words");
+		alert("You tried to click a link that has no text.");
+		return false;
+	}
+
+	const warning = `You have clicked a link to ${elem.href}.
+	 This requires a permanent sacrifice the word${words.length>1?'s':''} ` +
+		textlist(words);
+
+
+
+	const navigate = confirm(substituteStr(warning));
+
+	if (navigate){
+		console.log("User elected to ban words", words);
+	}
+
+	return navigate;
 }
 
-//// Click handling
 function handleClick(e) {
 	let isLink = false;
 	let link = null;
@@ -94,8 +125,13 @@ function handleClick(e) {
 	if (isLink) {
 		if (debug) console.log("It's a link!", link);
 
+		const navigate = confirmLinkSacrifice(link);
+
+		if (navigate){
+			// TODO send new disallows mission control
+		}else{
 		e.preventDefault();
-		e.stopImmediatePropagation();
+		e.stopImmediatePropagation();}
 	}
 }
 
