@@ -75,7 +75,7 @@ chrome.storage.local.get(null, console.log);
 
 //// Click handling
 
-function confirmLinkSacrifice(elem){
+function confirmLinkSacrifice(elem) {
 	let s = [];
 
 	let node;
@@ -84,8 +84,8 @@ function confirmLinkSacrifice(elem){
 		s.push(node.nodeValue)
 	}
 
-	let words = s.join(' ').split(/\s+/).filter(
-		s => s.search(/\W/) === -1 && s.length>0);
+	let words = s.join(' ').split(/[\s.]/).filter(
+		s => s.search(/\W/) === -1 && s.length > 0);
 	words = words.map(substituteStr);
 
 	if (words.length === 0) {
@@ -95,14 +95,13 @@ function confirmLinkSacrifice(elem){
 	}
 
 	const warning = `You have clicked a link to ${elem.href}.
-	 This requires a permanent sacrifice the word${words.length>1?'s':''} ` +
+	 This requires a permanent sacrifice the word${words.length > 1 ? 's' : ''} ` +
 		textlist(words);
-
 
 
 	const navigate = confirm(substituteStr(warning));
 
-	if (navigate){
+	if (navigate) {
 		console.log("User elected to ban words", words);
 	}
 
@@ -127,11 +126,12 @@ function handleClick(e) {
 
 		const navigate = confirmLinkSacrifice(link);
 
-		if (navigate){
+		if (navigate) {
 			// TODO send new disallows mission control
-		}else{
-		e.preventDefault();
-		e.stopImmediatePropagation();}
+		} else {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+		}
 	}
 }
 

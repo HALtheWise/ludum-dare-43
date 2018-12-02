@@ -92,7 +92,7 @@ function handleBeforeNavigation(e) {
 }
 
 function handleNavigation(e) {
-	const search_providers = 'google.com bing.com facebook.com en.wikipedia.org search.yahoo.com'.split(' ');
+	const search_providers = 'www.google.com bing.com facebook.com en.wikipedia.org search.yahoo.com'.split(' ');
 	let typed_string = "";
 
 	if (e.transitionQualifiers.includes('from_address_bar')) {
