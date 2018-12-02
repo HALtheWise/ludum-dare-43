@@ -1,0 +1,32 @@
+#panda_overlay {
+    font-weight: bold;
+    position: fixed;
+    z-index: 5000;
+    left: 0;
+    top: 80%;
+    right: 0; /* Full width */
+    bottom: 0; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 20pt;
+    padding: 20px;
+}
+
+#block_page {
+    display: none;
+    position: fixed;
+    z-index: 4999;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    background-color: black;
+}
+
+#pandaimg {
+    width: 300px;
+    right: 0;
+    top: 70%;
+    position: fixed;
+}

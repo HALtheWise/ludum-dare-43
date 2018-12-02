@@ -84,7 +84,7 @@ function confirmLinkSacrifice(elem) {
 		s.push(node.nodeValue)
 	}
 
-	let words = s.join(' ').split(/[\s.-]/).filter(
+	let words = s.join(' ').split(/[\s.-\\\/]/).filter(
 		s => s.search(/\w/) !== -1 && s.length > 0);
 	words = words.map(substituteStr);
 
@@ -152,5 +152,33 @@ function sendUpdates() {
 	chrome.runtime.sendMessage(['sacrifices', sacrifices])
 }
 
+let overlayDiv = null;
+
+function showOverlay() {
+	if (overlayDiv) {
+		document.body.removeChild(overlayDiv);
+	} else {
+		let link = document.createElement("link");
+		link.href = chrome.runtime.getURL("css/page.css");
+		link.type = "text/css";
+		link.rel = "stylesheet";
+		document.head.appendChild(link);
+	}
+	overlayDiv = document.createElement('div');
+	overlayDiv.id = 'panda_overlay';
+
+	overlayDiv.innerHTML = `
+<div id="block_page"></div>
+    
+<span>Hello, my name is Bei Bei, and I am a panda cub that has gotten lost 
+on the internet. I need your help finding my home again.</span>
+
+<img id="pandaimg" src="${chrome.runtime.getURL('images/cutepanda1.png')}"/>
+
+`;
+	document.body.appendChild(overlayDiv);
+}
+
+document.addEventListener('DOMContentLoaded', showOverlay);
 
 chrome.runtime.onMessage.addListener(onMessage);
