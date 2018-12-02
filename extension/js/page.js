@@ -169,11 +169,19 @@ function showOverlay() {
 
 	overlayDiv.innerHTML = `
 <div id="block_page"></div>
-    
-<span>Hello, my name is Bei Bei, and I am a panda cub that has gotten lost 
-on the internet. I need your help finding my home again.</span>
+<img id="pandaimg" alt="CUUUUTEE!" src="${chrome.runtime.getURL('images/cutepanda1.png')}"/>
 
-<img id="pandaimg" src="${chrome.runtime.getURL('images/cutepanda1.png')}"/>
+<div id="overlay_text">
+	<span>Hello, my name is Bei Bei, and I am a panda cub that has gotten lost 
+	on the internet. I need your help finding my home again.</span>
+
+	<div class="horizontal_scroll">
+		<div id="sacrificed_words" class="sacrifice">Loading...</div>
+	</div>
+	<div class="horizontal_scroll">
+		<div id="sacrificed_letters" class="sacrifice">Loading...</div>
+	</div>
+</div>
 
 `;
 	document.body.appendChild(overlayDiv);

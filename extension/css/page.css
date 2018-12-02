@@ -30,3 +30,20 @@
     top: 70%;
     position: fixed;
 }
+
+#overlay_text {
+    margin: 20px;
+    right: 20%;
+    position: fixed;
+    left: 0;
+}
+
+.horizontal_scroll {
+    overflow-x: auto;
+}
+
+.sacrifice {
+    font-weight: normal;
+    font-size: 16pt;
+    width: fit-content;
+}
