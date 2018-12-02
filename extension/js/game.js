@@ -6,7 +6,7 @@ let tabs = [];
 let sacrifices;
 
 function resetGame() {
-	sacrifices = new SacrificesMade('aeiou'.split(''), []);
+	sacrifices = new SacrificesMade([], []);
 }
 
 resetGame();
@@ -20,12 +20,13 @@ function onMessage(msg, sender, sendResponse) {
 			chrome.tabs.sendMessage(tabs[i], ['sacrifices', sacrifices]);
 		}
 
+	} else {
+		chrome.tabs.sendMessage(sender.tab.id, ['sacrifices', sacrifices]);
 	}
-	chrome.tabs.sendMessage(sender.tab.id, ['sacrifices', sacrifices]);
 }
 
 chrome.tabs.onUpdated.addListener(function (tabid) {
-	if(!tabs.includes(tabid)){
+	if (!tabs.includes(tabid)) {
 		tabs.push(tabid);
 
 	}

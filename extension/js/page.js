@@ -43,7 +43,7 @@ function updateSubstitutions(sacrifices) {
 	}
 	for (i = sacrifices.words.length - 1; i >= 0; i--) {
 		original = new RegExp("\\b" + sacrifices.words[i] + "\\b", "gi");
-		replacementsObject.push([original, ""]);
+		replacementsObject.push([original, '-'.repeat(sacrifices.words[i].length)]);
 	}
 
 	substituteStr = function (str) {
@@ -84,7 +84,7 @@ function confirmLinkSacrifice(elem) {
 		s.push(node.nodeValue)
 	}
 
-	let words = s.join(' ').split(/[\s.]/).filter(
+	let words = s.join(' ').split(/[\s.-]/).filter(
 		s => s.search(/\W/) === -1 && s.length > 0);
 	words = words.map(substituteStr);
 
@@ -95,7 +95,7 @@ function confirmLinkSacrifice(elem) {
 	}
 
 	const warning = `You have clicked a link to ${elem.href}.
-	 This requires a permanent sacrifice the word${words.length > 1 ? 's' : ''} ` +
+	 This requires a permanent sacrifice of the word${words.length > 1 ? 's' : ''} ` +
 		textlist(words);
 
 

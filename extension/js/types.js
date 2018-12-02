@@ -5,6 +5,7 @@ function SacrificesMade(letters, words) {
 
 
 function textlist(vals) {
+	vals = vals.map(x=>`"${x}"`);
 	if (vals.length === 0) {
 		return '';
 	}
