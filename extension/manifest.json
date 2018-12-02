@@ -11,6 +11,7 @@
     ],
     "persistent": true
   },
+  "browser_action": {},
   "content_scripts": [
     {
       "matches": [

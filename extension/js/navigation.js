@@ -122,24 +122,24 @@ function handleNavigation(e) {
 		// if (clean)
 
 		// Check for duplicate letters
-		for (let i = 0; i < letters.length; i++) {
-			const l = letters[i];
-
-			if (l.search(/^[\w ]/) === -1)
-			// Special characters don't fall for the double-count ban
-				continue;
-
-			if (letters.indexOf(l) !== letters.lastIndexOf(l)) {
-				disallow_reason = `You may not sacrifice the letter "${l}" more than once!`;
-				break;
-			}
-		}
+		// for (let i = 0; i < letters.length; i++) {
+		// 	const l = letters[i];
+		//
+		// 	if (l.search(/^[\w ]/) === -1)
+		// 	// Special characters don't fall for the double-count ban
+		// 		continue;
+		//
+		// 	if (letters.indexOf(l) !== letters.lastIndexOf(l)) {
+		// 		disallow_reason = `You may not sacrifice the letter "${l}" more than once!`;
+		// 		break;
+		// 	}
+		// }
 
 		// Ask for their consent
 
 		const message = `You are attempting to search for the phrase "${typed_string}".`
 			+ `\nThis requires a permanent sacrifice of the letter${letters.length > 1 ? 's' : ''} `
-			+ textlist(letters.map(s => `"${s}"`));
+			+ textlist(letters.map(s => `${s}`));
 
 		let consent = false;
 		if (!disallow_reason) {
@@ -154,6 +154,9 @@ function handleNavigation(e) {
 		if (!consent) {
 			// Undo the navigation action
 			blockUrl(e);
+		} else {
+			sacrifices.letters.push(...letters);
+			sendUpdates();
 		}
 	}
 	// confirm(``)

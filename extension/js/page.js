@@ -85,7 +85,7 @@ function confirmLinkSacrifice(elem) {
 	}
 
 	let words = s.join(' ').split(/[\s.-]/).filter(
-		s => s.search(/\W/) === -1 && s.length > 0);
+		s => s.search(/\w/) !== -1 && s.length > 0);
 	words = words.map(substituteStr);
 
 	if (words.length === 0) {
