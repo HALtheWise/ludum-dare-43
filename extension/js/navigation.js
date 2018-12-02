@@ -30,36 +30,41 @@ function createTabRecordIfNeeded(tabId) {
 
 
 //Block URLs
-function blockUrlIfMatch(details) {
+function blockUrl(details) {
 	createTabRecordIfNeeded(details.tabId);
-	if (/^[^:/]+:\/\/[^/]*stackexchange\.[^/.]+\//.test(details.url)) {
-		//Block this URL by navigating to the already current URL
-		console.log('Blocking URL:', details.url);
-		console.log('Returning to URL:', tabsInfo[details.tabId].completeUrl);
-		if (details.frameId !== 0) {
-			//This navigation is in a subframe. We currently handle that  by
-			//  navigating to the page prior to the current one.
-			//  Probably should handle this by changing the src of the frame.
-			//  This would require injecting a content script to change the src.
-			//  Would also need to handle frames within frames.
-			//Must navigate to priorCmpleteUrl as we can not load the current one.
-			tabsInfo[details.tabId].completeUrl = tabsInfo[details.tabId].priorCompleteUrl;
-		}
-		var urlToUse = tabsInfo[details.tabId].completeUrl;
-		urlToUse = (typeof urlToUse === 'string') ? urlToUse : '';
-		chrome.tabs.update(details.tabId, {url: urlToUse}, function (tab) {
-			if (chrome.runtime.lastError) {
-				if (chrome.runtime.lastError.message.indexOf('No tab with id:') > -1) {
-					//Chrome is probably loading a page in a tab which it is expecting to
-					//  swap out with a current tab.  Need to decide how to handle this
-					//  case.
-					//For now just output the error message
-					console.log('Error:', chrome.runtime.lastError.message)
-				} else {
-					console.log('Error:', chrome.runtime.lastError.message)
-				}
+	//Block this URL by navigating to the already current URL
+	console.log('Blocking URL:', details.url);
+	console.log('Returning to URL:', tabsInfo[details.tabId].completeUrl);
+	if (details.frameId !== 0) {
+		//This navigation is in a subframe. We currently handle that  by
+		//  navigating to the page prior to the current one.
+		//  Probably should handle this by changing the src of the frame.
+		//  This would require injecting a content script to change the src.
+		//  Would also need to handle frames within frames.
+		//Must navigate to priorCmpleteUrl as we can not load the current one.
+		tabsInfo[details.tabId].completeUrl = tabsInfo[details.tabId].priorCompleteUrl;
+	}
+	var urlToUse = tabsInfo[details.tabId].completeUrl;
+	urlToUse = (typeof urlToUse === 'string') ? urlToUse : '';
+	chrome.tabs.update(details.tabId, {url: urlToUse}, function (tab) {
+		if (chrome.runtime.lastError) {
+			if (chrome.runtime.lastError.message.indexOf('No tab with id:') > -1) {
+				//Chrome is probably loading a page in a tab which it is expecting to
+				//  swap out with a current tab.  Need to decide how to handle this
+				//  case.
+				//For now just output the error message
+				console.log('Error:', chrome.runtime.lastError.message)
+			} else {
+				console.log('Error:', chrome.runtime.lastError.message)
 			}
-		});
+		}
+	});
+}
+
+
+function blockUrlIfMatch(details) {
+	if (/^[^:/]+:\/\/[^/]*stackexchange\.[^/.]+\//.test(details.url)) {
+		blockUrl(details);
 		//Notify the user URL was blocked.
 		notifyOfBlockedUrl(details.url);
 	}
@@ -78,7 +83,8 @@ function notifyOfBlockedUrl(url) {
 
 //Startup
 chrome.webNavigation.onCompleted.addListener(completedLoadingUrlInTab);
-chrome.webNavigation.onBeforeNavigate.addListener(blockUrlIfMatch);
+
+// chrome.webNavigation.onBeforeNavigate.addListener(blockUrlIfMatch);
 
 
 function handleBeforeNavigation(e) {
@@ -100,7 +106,7 @@ function handleNavigation(e) {
 			typed_string = search_query;
 		} else if (e.transitionType === 'typed') {
 			typed_string = url.host;
-			if (typed_string.startsWith('www.')){
+			if (typed_string.startsWith('www.')) {
 				typed_string = typed_string.slice(4);
 			}
 		}
@@ -144,6 +150,11 @@ function handleNavigation(e) {
 		}
 
 		console.log(consent);
+
+		if (!consent) {
+			// Undo the navigation action
+			blockUrl(e);
+		}
 	}
 	// confirm(``)
 

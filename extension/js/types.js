@@ -16,4 +16,3 @@ function textlist(vals) {
 	}
 	return `${vals.slice(0, -1).join(', ')}, and ${vals[vals.length - 1]}`
 }
-
