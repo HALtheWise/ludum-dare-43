@@ -18,7 +18,8 @@ function substituteNode(node) {
 		"FORM": 0,
 		"TEXTAREA": 0
 	};
-	if (!node.parentElement || node.parentElement.tagName in ignore) {
+	if (!node.parentElement || node.parentElement.tagName in ignore ||
+		node.parentElement.classList.contains('sacrifices')) {
 		return;
 	}
 	node.nodeValue = substituteStr(node.nodeValue);
@@ -84,7 +85,7 @@ function confirmLinkSacrifice(elem) {
 		s.push(node.nodeValue)
 	}
 
-	let words = s.join(' ').split(/[\s.-\\\/]/).filter(
+	let words = s.join(' ').split(/[\s.-\/]/).filter(
 		s => s.search(/\w/) !== -1 && s.length > 0);
 	words = words.map(substituteStr);
 
@@ -176,10 +177,12 @@ function showOverlay() {
 	on the internet. I need your help finding my home again.</span>
 
 	<div class="horizontal_scroll">
-		<div id="sacrificed_words" class="sacrifice">Loading...</div>
+		<div id="sacrificed_words" class="sacrifice">
+		Words sacrificed: ${textlist(sacrifices.words)}</div>
 	</div>
 	<div class="horizontal_scroll">
-		<div id="sacrificed_letters" class="sacrifice">Loading...</div>
+		<div id="sacrificed_letters" class="sacrifice">
+		Letters sacrificed: ${textlist(sacrifices.letters)}</div>
 	</div>
 </div>
 
