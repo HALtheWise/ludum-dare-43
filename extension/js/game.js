@@ -2,25 +2,33 @@ const debug = true;
 
 let enabled = true;
 
+let tabs = [];
+let sacrifices;
 
-function injectionScript(tabId, info, tab) {
-	if (debug) {
-		console.log("injection fire");
-	}
-
-	// if (enabled && !tab.url.startsWith('chrome://')) {
-	// 	chrome.tabs.executeScript(tabId, {
-	// 		file: "js/page.js",
-	// 		runAt: "document_start"
-	// 	}, function () {
-	// 		if (debug) {
-	// 			console.log('Script Executed');
-	// 		}
-	// 	});
-	// }
+function resetGame() {
+	sacrifices = new SacrificesMade('aeiou'.split(''), []);
 }
 
-chrome.tabs.onUpdated.addListener(injectionScript);
-// chrome.runtime.onStartup.addListener(fixDataCorruption);
+resetGame();
 
-chrome.runtime.onMessage.addListener(console.log);
+function onMessage(msg, sender, sendResponse) {
+	console.log("Got message", msg);
+	if (msg[0] === 'sacrifices') {
+		sacrifices = msg[1];
+
+		for (let i = 0; i < tabs.length; i++) {
+			chrome.tabs.sendMessage(tabs[i], ['sacrifices', sacrifices]);
+		}
+
+	}
+	chrome.tabs.sendMessage(sender.tab.id, ['sacrifices', sacrifices]);
+}
+
+chrome.tabs.onUpdated.addListener(function (tabid) {
+	if(!tabs.includes(tabid)){
+		tabs.push(tabid);
+
+	}
+});
+
+chrome.runtime.onMessage.addListener(onMessage);

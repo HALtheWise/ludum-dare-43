@@ -111,7 +111,7 @@ function handleNavigation(e) {
 			}
 		}
 	}
-	console.log("Detected navigation", e);
+// 	console.log("Detected navigation", e);
 
 	if (typed_string.length > 0) {
 		// The user is attempting navigation

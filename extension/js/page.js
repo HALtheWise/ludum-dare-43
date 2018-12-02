@@ -58,7 +58,8 @@ function updateSubstitutions(sacrifices) {
 		document.title = substituteStr(document.title);
 }
 
-updateSubstitutions(new SacrificesMade('a b c d e'.split(' '), 'cat'.split(' ')));
+let sacrifices = new SacrificesMade([], []);
+updateSubstitutions(sacrifices);
 
 // Setup mutation observer
 const observer = new MutationObserver(function (mutations) {
@@ -70,8 +71,7 @@ const observer = new MutationObserver(function (mutations) {
 });
 observer.observe(document, {childList: true, subtree: true});
 
-chrome.runtime.sendMessage("Hello World, before page load");
-chrome.storage.local.get(null, console.log);
+chrome.runtime.sendMessage(['update_me', null]);
 
 //// Click handling
 
@@ -103,6 +103,8 @@ function confirmLinkSacrifice(elem) {
 
 	if (navigate) {
 		console.log("User elected to ban words", words);
+		sacrifices.words.push(...words);
+		sendUpdates();
 	}
 
 	return navigate;
@@ -127,7 +129,6 @@ function handleClick(e) {
 		const navigate = confirmLinkSacrifice(link);
 
 		if (navigate) {
-			// TODO send new disallows mission control
 		} else {
 			e.preventDefault();
 			e.stopImmediatePropagation();
@@ -136,3 +137,20 @@ function handleClick(e) {
 }
 
 document.addEventListener('click', handleClick);
+
+// Messaging
+
+function onMessage(msg, sender, sendResponse) {
+	console.log("Got message", msg);
+	if (msg[0] === 'sacrifices') {
+		sacrifices = msg[1];
+		updateSubstitutions(sacrifices);
+	}
+}
+
+function sendUpdates() {
+	chrome.runtime.sendMessage(['sacrifices', sacrifices])
+}
+
+
+chrome.runtime.onMessage.addListener(onMessage);
