@@ -24,14 +24,14 @@
     background-color: black;
 }
 
-#pandaimg {
+.pandaimg {
     width: 300px;
     right: 0;
     top: 70%;
     position: fixed;
 }
 
-#overlay_text {
+.overlay_text {
     margin: 20px;
     right: 20%;
     position: fixed;
@@ -46,4 +46,8 @@
     font-weight: normal;
     font-size: 16pt;
     width: fit-content;
+}
+
+.victory {
+    font-size: 40pt;
 }

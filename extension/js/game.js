@@ -28,6 +28,14 @@ function onMessage(msg, sender, sendResponse) {
 }
 
 function sendUpdates() {
+	// Normalize
+	sacrifices.words = Array(...new Set(sacrifices.words.map(s => s.toLocaleLowerCase())));
+	sacrifices.letters = Array(...new Set(sacrifices.letters.map(s => s.toLocaleLowerCase())));
+	sacrifices.words.sort();
+	sacrifices.letters.sort();
+	sacrifices.words.filter(s=>s.search(/[a-z ]/) >= 0);
+	sacrifices.letters.filter(s=>s.search(/[a-z ]/) >= 0);
+
 	for (let i = 0; i < tabs.length; i++) {
 		chrome.tabs.sendMessage(tabs[i], ['sacrifices', sacrifices]);
 	}

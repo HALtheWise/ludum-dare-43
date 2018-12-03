@@ -1,13 +1,14 @@
 function SacrificesMade(letters, words) {
 	this.letters = letters;
 	this.words = words;
+	this.won = false;
 }
 
 
 function textlist(vals) {
 	vals = vals.map(x=>`"${x}"`);
 	if (vals.length === 0) {
-		return '';
+		return 'None';
 	}
 	if (vals.length === 1) {
 		return vals[0];
