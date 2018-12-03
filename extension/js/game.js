@@ -48,7 +48,7 @@ chrome.tabs.onUpdated.addListener(function (tabid) {
 	}
 });
 
-chrome.browserAction.onClicked.addListener(resetGame);
+// chrome.browserAction.onClicked.addListener(resetGame);
 
 chrome.runtime.onMessage.addListener(onMessage);
 

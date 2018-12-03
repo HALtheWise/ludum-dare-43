@@ -11,6 +11,7 @@
     color: white;
     font-size: 20pt;
     padding: 20px;
+    font-family: arial, sans-serif;
 }
 
 #block_page {
@@ -25,9 +26,9 @@
 }
 
 .pandaimg {
-    width: 300px;
+    width: 500px;
     right: 0;
-    top: 70%;
+    bottom: -100px;
     position: fixed;
 }
 
@@ -57,4 +58,11 @@
     /* left: 75%; */
     position: relative;
     /* z-index: 3000; */
+}
+
+.more_instructions{font-size: 14pt;font-weight: normal;}
+
+.hint{
+    font-weight: normal;
+    font-style: italic;
 }

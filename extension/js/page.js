@@ -227,10 +227,12 @@ function showOverlay() {
 	<img class="pandaimg" alt="CUUUUTEE!" src="${chrome.runtime.getURL('images/cutepanda1.png')}"/>
 	<div class="overlay_text">
 		<span>Help! A panda cub has become lost on the Internet! 
-		Lead it to the page of where it lives <br>by following links and searching. 
-		<i>Hint: I was named by two First Ladies</i></span>
+		Lead it to the page of where it lives by following links and searching. 
+		<span class="hint">Hint: I was named by two First Ladies</span></span>
 		<br>
-		<button id="resetbutton2" style="color: black">Reset</button>
+		<span class="more_instructions">You can start on this page, or by refreshing any other tab you currently have open in your browser.</span>
+		<br>
+		<button id="resetbutton2" class="nofilter" style="color: black">Reset</button>
 
 		<div class="horizontal_scroll">
 			<div id="sacrificed_letters" class="sacrifice">
