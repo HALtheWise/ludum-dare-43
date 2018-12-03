@@ -226,16 +226,19 @@ function showOverlay() {
 <span id="not_won">
 	<img class="pandaimg" alt="CUUUUTEE!" src="${chrome.runtime.getURL('images/cutepanda1.png')}"/>
 	<div class="overlay_text">
-		<span>Hello, my name is Bei Bei, and I am a panda cub that has gotten lost 
-		on the internet. I need your help finding my home again.</span>
-	
-		<div class="horizontal_scroll">
-			<div id="sacrificed_words" class="sacrifice">
-			Words sacrificed: <span class="nofilter">${textlist(sacrifices.words)}</span></div>
-		</div>
+		<span>Help! A panda cub has become lost on the Internet! 
+		Lead it to the page of where it lives <br>by following links and searching. 
+		<i>Hint: I was named by two First Ladies</i></span>
+		<br>
+		<button id="resetbutton2" style="color: black">Reset</button>
+
 		<div class="horizontal_scroll">
 			<div id="sacrificed_letters" class="sacrifice">
 			Letters sacrificed: <span class="nofilter">${textlist(sacrifices.letters)}</span></div>
+		</div>
+		<div class="horizontal_scroll">
+			<div id="sacrificed_words" class="sacrifice">
+			Words sacrificed: <span class="nofilter">${textlist(sacrifices.words)}</span></div>
 		</div>
 	</div>
 </span>
@@ -244,17 +247,19 @@ function showOverlay() {
 	<img class="pandaimg" alt="CUUUUTEER!" src="${chrome.runtime.getURL('images/cutepanda2.png')}"/>
 	<div class="overlay_text">
 
-	Congratulations on beating this game, please rate it
-	and leave comments on <a href="https://ldjam.com/events/ludum-dare/43/$129439">Ludum Dare</a>
+	Congratulations on beating this game!
+	<br> 
+	If you want to reset the game, simply click <button id="resetbutton" style="color: black">here</button>.
+	Otherwise, feel free to uninstall the extension and 
+	rate/comment on <a href="https://ldjam.com/events/ludum-dare/43/$129439">Ludum Dare</a>.
 	<br>
-	If you want to play again, simply click <button id="resetbutton" style="color: black">here</button>.
-	Otherwise, feel free to uninstall the extension.
 	</div>
 </span>
 `;
 
 	document.body.appendChild(overlayDiv);
 
+	document.getElementById('resetbutton2').onclick = reset;
 	document.getElementById('resetbutton').onclick = reset;
 
 	if (sacrifices.won) {
@@ -266,7 +271,7 @@ function showOverlay() {
 function reset(){
 	sacrifices = new SacrificesMade([], []);
 	sendUpdates();
-	window.location = 'https://en.wikipedia.org';
+	window.location = 'https://google.com';
 }
 
 document.addEventListener('DOMContentLoaded', showOverlay);

@@ -3,7 +3,7 @@
     position: fixed;
     z-index: 5000;
     left: 0;
-    top: 80%;
+    height: 170px;
     right: 0; /* Full width */
     bottom: 0; /* Full height */
     overflow: auto; /* Enable scroll if needed */
@@ -32,14 +32,15 @@
 }
 
 .overlay_text {
-    margin: 20px;
-    right: 20%;
+    margin-left: 20px;
+    right: 30%;
     position: fixed;
     left: 0;
 }
 
 .horizontal_scroll {
     overflow-x: auto;
+    height: 30px;
 }
 
 .sacrifice {
@@ -50,4 +51,10 @@
 
 .victory {
     font-size: 40pt;
+}
+
+#resetbutton2{
+    /* left: 75%; */
+    position: relative;
+    /* z-index: 3000; */
 }

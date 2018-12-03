@@ -54,3 +54,9 @@ chrome.runtime.onMessage.addListener(onMessage);
 
 chrome.runtime.onInstalled.addListener(resetGame);
 chrome.runtime.onStartup.addListener(resetGame);
+
+chrome.runtime.onInstalled.addListener(function (object) {
+    chrome.tabs.create({url: "https://google.com"}, function (tab) {
+        console.log("New tab launched");
+    });
+});
